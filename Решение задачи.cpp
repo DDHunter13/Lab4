@@ -1,85 +1,87 @@
 #include <iostream>
 #include <locale.h>
 #include <fstream>
+#include <stdio.h>
 
 using namespace std;
 
 int main(void) {
 	setlocale(LC_ALL, "Russian");
 
-	char str[20];
-	char str2[6];
-	char place1[40];
-	char place2[40];
-	char place3[40];
-	char space[] = " ";
-	int b1, b2, b3, max1, max2, max3;
-	int i, g;
-
 	ifstream in("in.txt");
 	if (!in.is_open()) {
 		cout << "Файл не найден" << endl;
 		return -1;
 	}
-	max1 = 0;
-	max2 = 0;
-	max3 = 0;
-	
-	in >> g;
-	for (i = 0; i < g; ++i) {
-		in.getline(str, 19, ' ');
+
+	char space[] = " ";
+	char readstr[50];
+	int score[100];
+	char names[100][50];
+	int i, n, j;
+	int sc1 = 0;
+	int sc2 = 0;
+	int sc3 = 0;
+
+	n = 0;
+	for (i = 0; i < 100; ++i) {
+		in.getline(names[n], 49);
+		
 		if (in.fail()) {
-			cout << "Ошибка чтения файла" << endl;
-			return -2;
+			break;
 		}
-		in.getline(str2, 5, ' ');
-		if (in.fail()) {
-			cout << "Ошибка чтения файла" << endl;
-			return -3;
+		
+		strncat_s(names[n], space, 2);
+		
+		
+		for (i = 0; names[n][i] != ' '; ++i);
+		++i;
+		for (i; names[n][i] != ' '; ++i);
+		++i;
+		sc1 = 0;
+		sc2 = 0;
+		sc3 = 0;
+		for (i; names[n][i] != ' '; ++i) {
+			sc1 = ((int)(names[n][i]) - (int)('1') + 1) + sc1 * 10;
 		}
-		in >> b1 >> b2 >> b3;
-		if (in.fail()) {
-			cout << "Ошибка чтения файла" << endl;
-			return -4;
-		};
-		if (b3 > b2) {
-			swap(b2, b3);
+		++i;
+		for (i; names[n][i] != ' '; ++i) {
+			sc2 = ((int)(names[n][i]) - (int)('1') + 1) + sc2 * 10;
 		}
-		if (b2 > b1) {
-			swap(b1, b2);
+		++i;
+		for (i; names[n][i] != ' '; ++i) {
+			sc3 = ((int)(names[n][i]) - (int)('1') + 1) + sc3 * 10;
 		}
-		if (b1 >= max1) {
-			max3 = max2;
-			max2 = max1;
-			max1 = b1;
+		++i;
 
-			strncpy_s(place3, place2, 39);
-			strncpy_s(place2, place1, 39);
-
-			strncpy_s(place1, str, 29);
-			strncat_s(place1, space, 1);
-			strncat_s(place1, str2, 5);
+		if (sc1 < sc2) {
+			sc1 = sc2;
 		}
-		else if (b1 >= max2) {
-			max3 = max2;
-			max2 = b1;
-
-			strncpy_s(place3, place2, 39);
-
-			strncpy_s(place2, str, 29);
-			strncat_s(place2, space, 1);
-			strncat_s(place2, str2, 5);
+		if (sc1 < sc3) {
+			sc1 = sc3;
 		}
-		else if (b1 >= max3) {
-			max3 = b1;
+		score[n] = sc1;
+		++n;
+		
+	}
 
-			strncpy_s(place3, str, 29);
-			strncat_s(place3, space, 1);
-			strncat_s(place3, str2, 5);
+	for (i = 0; i < n; ++i) {
+		for (j = i + 1; j < n; ++j) {
+			if (score[i] < score[j]) {
+				swap(names[i], names[j]);
+				swap(score[i], score[j]);
+			}
 		}
 	}
-	cout << place1 << endl;
-	cout << place2 << endl;
-	cout << place3 << endl;
+	j = 0;
+	for (i = 0; i < 3; ++i) {
+		cout << names[j] << endl;
+		while (score[j] == score[j + 1]) {
+			cout << names[j + 1] << endl;
+			++j;
+		}
+		++j;
+	}
+
 	return 0;
 }
