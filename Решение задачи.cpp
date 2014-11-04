@@ -2,86 +2,57 @@
 #include <locale.h>
 #include <fstream>
 #include <stdio.h>
+#include <string>
+#include <algorithm>
 
 using namespace std;
 
+struct Results {
+	string FirstName;
+	string SecName;
+	double Score;
+	bool operator<(Results scr) {
+		return (Score > scr.Score);
+	}
+};
+
 int main(void) {
+
 	setlocale(LC_ALL, "Russian");
 
+	double sc1, sc2, sc3, max;
+	int num, j;
+	
 	ifstream in("in.txt");
 	if (!in.is_open()) {
 		cout << "Файл не найден" << endl;
 		return -1;
 	}
+	in >> num;
+	Results *info = new Results[num];
 
-	char space[] = " ";
-	char readstr[50];
-	int score[100];
-	char names[100][50];
-	int i, n, j;
-	int sc1 = 0;
-	int sc2 = 0;
-	int sc3 = 0;
-
-	n = 0;
-	for (i = 0; i < 100; ++i) {
-		in.getline(names[n], 49);
-		
-		if (in.fail()) {
-			break;
-		}
-		
-		strncat_s(names[n], space, 2);
-		
-		
-		for (i = 0; names[n][i] != ' '; ++i);
-		++i;
-		for (i; names[n][i] != ' '; ++i);
-		++i;
-		sc1 = 0;
-		sc2 = 0;
-		sc3 = 0;
-		for (i; names[n][i] != ' '; ++i) {
-			sc1 = ((int)(names[n][i]) - (int)('1') + 1) + sc1 * 10;
-		}
-		++i;
-		for (i; names[n][i] != ' '; ++i) {
-			sc2 = ((int)(names[n][i]) - (int)('1') + 1) + sc2 * 10;
-		}
-		++i;
-		for (i; names[n][i] != ' '; ++i) {
-			sc3 = ((int)(names[n][i]) - (int)('1') + 1) + sc3 * 10;
-		}
-		++i;
-
-		if (sc1 < sc2) {
-			sc1 = sc2;
-		}
-		if (sc1 < sc3) {
-			sc1 = sc3;
-		}
-		score[n] = sc1;
-		++n;
-		
+	for (int i = 0; i < num; ++i) {
+		in >> info[i].FirstName;
+		in >> info[i].SecName;
+		in >> sc1 >> sc2 >> sc3;
+		max = fmax(sc1, sc2);
+		max = fmax(max, sc3);
+		info[i].Score = max;
 	}
-
-	for (i = 0; i < n; ++i) {
-		for (j = i + 1; j < n; ++j) {
-			if (score[i] < score[j]) {
-				swap(names[i], names[j]);
-				swap(score[i], score[j]);
-			}
-		}
-	}
+	sort(info, info + num);
+	
 	j = 0;
-	for (i = 0; i < 3; ++i) {
-		cout << names[j] << endl;
-		while (score[j] == score[j + 1]) {
-			cout << names[j + 1] << endl;
+	for (int i = 0; i < 3; ++i) {
+		if (j < num) {
+			cout << info[j].FirstName << ' ' << info[j].SecName << ' ' << info[j].Score << '\n';
+		}
+		while ((info[j].Score == info[j + 1].Score) && (j < num)){
+			cout << info[j + 1].FirstName << ' ' << info[j + 1].SecName << ' ' << info[j + 1].Score << '\n';
 			++j;
 		}
 		++j;
 	}
 
+	delete[] info;
 	return 0;
 }
