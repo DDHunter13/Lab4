@@ -8,12 +8,15 @@
 using namespace std;
 
 struct Results {
-	string FirstName;
-	string SecName;
-	double Score;
-	bool operator<(const  Results& scr) {
-		return (Score > scr.Score);
-	}
+		string FirstName;
+		string SecName;
+		double Score;
+		bool operator<(const Results& scr) {
+			return (Score > scr.Score);
+		}
+		friend ostream& operator << (ostream& s, Results& out) {
+			return cout << out.FirstName << ' ' << out.SecName << ' ' << out.Score << endl;
+		}
 };
 
 int main(void) {
@@ -44,10 +47,10 @@ int main(void) {
 	j = 0;
 	for (int i = 0; i < 3; ++i) {
 		if (j < num) {
-			cout << info[j].FirstName << ' ' << info[j].SecName << ' ' << info[j].Score << '\n';
+			cout << info[j];
 		}
 		while ((j + 1 < num) && (info[j].Score == info[j + 1].Score)){
-			cout << info[j + 1].FirstName << ' ' << info[j + 1].SecName << ' ' << info[j + 1].Score << '\n';
+			cout << info[j + 1];
 			++j;
 		}
 		++j;
