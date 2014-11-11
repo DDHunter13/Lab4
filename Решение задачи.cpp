@@ -11,7 +11,7 @@ struct Results {
 	string FirstName;
 	string SecName;
 	double Score;
-	bool operator<(Results scr) {
+	bool operator<(const  Results& scr) {
 		return (Score > scr.Score);
 	}
 };
