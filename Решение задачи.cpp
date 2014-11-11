@@ -46,7 +46,7 @@ int main(void) {
 		if (j < num) {
 			cout << info[j].FirstName << ' ' << info[j].SecName << ' ' << info[j].Score << '\n';
 		}
-		while ((info[j].Score == info[j + 1].Score) && (j < num)){
+		while ((j + 1 < num) && (info[j].Score == info[j + 1].Score)){
 			cout << info[j + 1].FirstName << ' ' << info[j + 1].SecName << ' ' << info[j + 1].Score << '\n';
 			++j;
 		}
